@@ -34,7 +34,7 @@ struct Node* CreateTree(struct Node* root, struct Node* r, int data) {
 
 	if (data > r->data)
 		CreateTree(r, r->left, data);
-	else 
+	else if (data < r->data)
 		CreateTree(r, r->right, data);
 	return root;
 }
@@ -64,12 +64,6 @@ struct Node* find(struct Node* root, int data) {
 	else return NULL;
 }
 
-int count(struct Node* root, int data, int cnt) {
-	if (root->data == data) cnt++;
-	if (root->data >= data && root->right != NULL) cnt = count(root->right, data, cnt);
-	else if (root->left != NULL)  cnt = count(root->left, data, cnt);
-	else return cnt;
-}
 
 int main()
 {
@@ -97,8 +91,6 @@ int main()
 	int s;
 	printf("Введите число для поиска: ");
 	scanf("%d", &s);
-	cnt = count(root, s, 0);
-	printf("найдено %d вхождения\n", cnt);
 
 	struct Node* r = find(root, s);
 	if (r) printf("найден %d\n", r->data);
