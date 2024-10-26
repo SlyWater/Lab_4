@@ -8,7 +8,8 @@ struct Node {
 	int data;
 	struct Node* left;
 	struct Node* right;
-} ;
+};
+int deep = 0, min = -1, max = 0;
 
 struct Node* root = NULL;
 
@@ -34,7 +35,7 @@ struct Node* CreateTree(struct Node* root, struct Node* r, int data) {
 
 	if (data > r->data)
 		CreateTree(r, r->left, data);
-	else if (data < r->data)
+	else
 		CreateTree(r, r->right, data);
 	return root;
 }
@@ -64,6 +65,26 @@ struct Node* find(struct Node* root, int data) {
 	else return NULL;
 }
 
+int count(struct Node* root, int data, int cnt) {
+	if (root->data == data) {
+		cnt++;
+		if (min == -1 && deep >= min) min = deep;
+		else if (deep > max) max = deep;
+	}
+	if (root->data >= data && root->right != NULL) {
+		deep++;
+		cnt = count(root->right, data, cnt);
+	}
+	else if (root->left != NULL)  {
+		deep++;
+		cnt = count(root->left, data, cnt);
+	}
+	else {
+		deep--;
+		return cnt; 
+
+	}
+}
 
 int main()
 {
@@ -80,23 +101,29 @@ int main()
 			printf("Построение дерева окончено\n\n");
 			start = 0;
 		}
-		else
+		else {
 			root = CreateTree(root, root, D);
+		}
 
 	}
 
 	print_tree(root, 0);
 
-	int cnt;
 	int s;
 	printf("Введите число для поиска: ");
 	scanf("%d", &s);
 
+
 	struct Node* r = find(root, s);
-	if (r) printf("найден %d\n", r->data);
+	if (r) {
+		printf("найден %d\n", r->data);
+		int cnt;
+		cnt = count(root, s, 0);
+		printf("найдено %d вхождения\n", cnt);
+		printf("\nпервое вхождение на уровне %d\nвторое вхождение на уровне %d", min, max);
+	}
 	else printf("элемент не найден\n");
 
 	scanf_s("%d", &D);
 	return 0;
 }
-
